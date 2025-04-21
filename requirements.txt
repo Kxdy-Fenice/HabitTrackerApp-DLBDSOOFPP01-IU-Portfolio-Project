@@ -1,0 +1,5 @@
+seaborn
+sqlite3
+matplotlib
+click
+python-dateutil
