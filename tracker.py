@@ -55,6 +55,28 @@ class Tracker:
             print(f"Database error while listing habits: {e}")
             return []
 
+    def list_habits_by_periodicity(self, periodicity):
+        """
+        Fetches a list of all habits  with the specified periodicity
+        :param periodicity: The periodicity, i.e., daily, weekly, monthly
+        :return: A list of habits with the specified periodicity
+        """
+        if periodicity not in ['daily', 'weekly', 'monthly']:
+            print(f"Warning: Invalid periodicity '{periodicity}' provided. Returning empty list.")
+            return []
+
+        try:
+            self.cursor.execute("SELECT * FROM habits WHERE periodicity=?", (periodicity,))
+            rows = self.cursor.fetchall()
+
+            habits_list = [self._habit_from_row(row) for row in rows]
+
+            return habits_list
+
+        except sqlite3.Error as e:
+            print(f"Database error while listing habits by periodicity '{periodicity}': {e}")
+            return []
+
     def create_habit(self, name, periodicity='daily'):
         """
         Creates new habit and adds it to the database

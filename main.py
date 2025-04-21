@@ -9,6 +9,20 @@ tracker = Tracker()
 analyzer = Analyse(tracker)
 
 
+# 5 predefined habits
+predefined_habits_list = [
+    ("Language Practice", "daily"),
+    ("Write a Positive Thing", "daily"),
+    ("Do the Laundry", "weekly"),
+    ("Iron the Clothes", "weekly"),
+    ("Read a book", "monthly"),
+]
+print("--Setting up predefined habits--")
+for name, periodicity in predefined_habits_list:
+    tracker.create_habit(name, periodicity)
+print("--Predefined habits set up--")
+
+
 def get_habit_name(prompt="Enter habit name"):
     """
     Get habit name with validation
@@ -53,6 +67,23 @@ def list_habits():
             click.echo(f"- {name}")
     else:
         click.echo("No habits found or unable to retrieve habits.")
+
+
+@cli.command()
+@click.argument('periodicity', type=click.Choice(['daily', 'weekly', 'monthly']))
+def list_by_periodicity(periodicity):
+    """
+    List all habits with a specific periodicity.
+    :param periodicity: periodicity, i.e., daily, weekly, monthly
+    :return: list of habits with the same specified periodicity
+    """
+    habits = tracker.list_habits_by_periodicity(periodicity)
+    if habits:
+        click.echo(f"Habits with '{periodicity}' periodicity:")
+        for habit in habits:
+            click.echo(f"- {habit.name} (Streak: {habit.streak}, Longest: {habit.longest_streak})")
+    else:
+        click.echo(f"No habits found with '{periodicity}' periodicity.")
 
 
 @cli.command()
